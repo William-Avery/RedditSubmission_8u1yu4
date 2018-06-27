@@ -29,19 +29,37 @@ namespace Submission
         private void b_generate_Click(object sender, EventArgs e)
         {
             Document doc = new Document();
-
-            PdfWriter.GetInstance(doc, new FileStream(String.Format("C:/{0}.pdf", tb_employeeid.Text), FileMode.Create));
+            string path = String.Format("C:/{0}.pdf", tb_employeeid.Text);
+            PdfWriter.GetInstance(doc, new FileStream(path, FileMode.Create));
             doc.Open();
 
-            Paragraph p1 = new Paragraph(String.Format("Employee ID: {0}\n   Name: {1}", tb_employeeid.Text,tb_fullname.Text));
+            Paragraph p1 = new Paragraph(String.Format(rtb_header.Text, tb_employeeid.Text,tb_fullname.Text,tb_companyemail.Text));
+
+            Paragraph p2 = new Paragraph(String.Format(rtb_body.Text, tb_employeeid.Text, tb_fullname.Text, tb_companyemail.Text));
             doc.Add(p1);
+            doc.Add(p2);
             doc.Close();
-            adobebrowser.src = String.Format("C:/{0}.pdf", tb_employeeid.Text);
+            adobebrowser.src = path;
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
+        }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            string path = String.Format("C:/{0}.pdf", tb_employeeid.Text);
+            if (File.Exists(path))
+            {
+
+                File.Delete(path);
+            }
         }
     }
 }
